@@ -32,7 +32,17 @@ function today(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-export function ExpenseForm({ data, existing }: { data: TripData; existing?: Expense }) {
+/** Values from the quick entry; the user still reviews and saves the normal form. */
+export interface ExpensePrefill {
+  title: string
+  currency: string
+  amount: string
+  mode: SplitMode
+  selected: string[]
+  values: Record<string, string>
+}
+
+export function ExpenseForm({ data, existing, prefill }: { data: TripData; existing?: Expense; prefill?: ExpensePrefill }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -40,19 +50,20 @@ export function ExpenseForm({ data, existing }: { data: TripData; existing?: Exp
   const existingSplits = existing ? data.splits.filter((s) => s.expense_id === existing.id) : []
   const exp0 = currencyExponent(existing?.currency ?? data.trip.base_currency)
 
-  const [title, setTitle] = useState(existing?.title ?? '')
-  const [currency, setCurrency] = useState(existing?.currency ?? data.trip.base_currency)
-  const [amount, setAmount] = useState(existing ? minorToInput(existing.original_minor, exp0) : '')
+  const [title, setTitle] = useState(existing?.title ?? prefill?.title ?? '')
+  const [currency, setCurrency] = useState(existing?.currency ?? prefill?.currency ?? data.trip.base_currency)
+  const [amount, setAmount] = useState(existing ? minorToInput(existing.original_minor, exp0) : (prefill?.amount ?? ''))
   const [expenseDate, setExpenseDate] = useState(existing?.expense_date ?? today())
   const [category, setCategory] = useState<string | null>(existing?.category ?? null)
   const [note, setNote] = useState(existing?.note ?? '')
-  const [mode, setMode] = useState<SplitMode>(existing?.split_mode ?? 'equal')
-  const [advanced, setAdvanced] = useState(existing ? existing.split_mode !== 'equal' : false)
+  const [mode, setMode] = useState<SplitMode>(existing?.split_mode ?? prefill?.mode ?? 'equal')
+  const [advanced, setAdvanced] = useState(existing ? existing.split_mode !== 'equal' : prefill?.mode === 'percent')
   const [selected, setSelected] = useState<Set<string>>(
-    new Set(existing ? existingSplits.map((s) => s.person_id) : people.map((p) => p.id)),
+    new Set(existing ? existingSplits.map((s) => s.person_id) : (prefill?.selected ?? people.map((p) => p.id))),
   )
   const [values, setValues] = useState<Record<string, string>>(() => {
-    if (!existing || existing.split_mode === 'equal') return {}
+    if (!existing) return prefill?.values ?? {}
+    if (existing.split_mode === 'equal') return {}
     return Object.fromEntries(
       existingSplits.map((s) => [
         s.person_id,

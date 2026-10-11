@@ -38,7 +38,11 @@ describe('UX-03: Übersetzungen', () => {
   })
 
   it('jeder im Code verwendete Schlüssel existiert', () => {
-    const used = unique([...source.matchAll(/\bt\(\s*'([a-zA-Z_]+(?:\.[a-zA-Z_]+)+)'/g)].map((m) => m[1]))
+    const direct = [...source.matchAll(/\bt\(\s*'([a-zA-Z_]+(?:\.[a-zA-Z_]+)+)'/g)].map((m) => m[1])
+    // t(cond ? 'a.b' : 'c.d', …)
+    const ternary = [...source.matchAll(/\bt\(\s*[^()?]*\?\s*'([a-zA-Z_.]+)'\s*:\s*'([a-zA-Z_.]+)'/g)].flatMap((m) => [m[1], m[2]])
+    const used = unique([...direct, ...ternary])
+    expect(ternary.length).toBeGreaterThan(0)
     expect(used.filter((k) => !has(k))).toEqual([])
   })
 

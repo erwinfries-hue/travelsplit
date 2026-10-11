@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { useAuth } from '../../app/auth'
 import { Avatar, Badge, Button, Card, Empty, ErrorBox, Field, Input, LinkButton, PageHeader, Section } from '../../components/ui'
 import { date, dateTime, money } from '../../lib/format'
@@ -10,7 +10,7 @@ import { baseTotals, canEditExpense, CATEGORY_ICON } from '../trip/derive'
 import { useTripContext } from '../trip/TripLayout'
 import { personName } from '../trip/useTrip'
 import { DraftList } from './DraftList'
-import { ExpenseForm } from './ExpenseForm'
+import { ExpenseForm, type ExpensePrefill } from './ExpenseForm'
 import { ExpenseRow } from './ExpenseRow'
 import { ReceiptSection } from './ReceiptSection'
 
@@ -57,11 +57,13 @@ export function ExpensesPage() {
 export function NewExpensePage() {
   const { t } = useTranslation()
   const { data } = useTripContext()
+  const prefill = (useLocation().state as { prefill?: ExpensePrefill } | null)?.prefill
   if (data.trip.status !== 'active') return <Navigate to={`/trips/${data.trip.id}`} replace />
   return (
     <div>
       <PageHeader title={t('expenses.add')} subtitle={data.trip.title} back={`/trips/${data.trip.id}`} />
-      <ExpenseForm data={data} />
+      {prefill && <p className="mb-3 rounded-xl bg-navy-50 p-2 text-sm">{t('quick.review')}</p>}
+      <ExpenseForm data={data} prefill={prefill} />
     </div>
   )
 }

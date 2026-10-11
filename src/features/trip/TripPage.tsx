@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { Badge, Card, Empty, LinkButton, PageHeader, Section } from '../../components/ui'
 import { dateRange, money } from '../../lib/format'
 import { ExpenseRow } from '../expenses/ExpenseRow'
@@ -7,10 +7,13 @@ import { TransferRow } from '../balances/TransferRow'
 import { currenciesUsed, liveExpenses, suggestions, totalSpent } from './derive'
 import { useTripContext } from './TripLayout'
 import { DraftList } from '../expenses/DraftList'
+import { QuickEntry } from '../quick/QuickEntry'
 
 export function TripPage() {
   const { t } = useTranslation()
   const { data, live } = useTripContext()
+  const [params] = useSearchParams()
+  const shared = params.get('quick') ?? ''
   const { trip } = data
   const base = trip.base_currency
   const mine = data.myPersonId ? (data.balances.get(data.myPersonId) ?? 0n) : 0n
@@ -35,6 +38,7 @@ export function TripPage() {
         }
       />
 
+      {trip.status === 'active' && data.myPersonId && <QuickEntry key={shared} data={data} initialText={shared} />}
       <DraftList tripId={trip.id} />
       {pendingForMe.length > 0 && (
         <Link to={`/trips/${trip.id}/balances`}>

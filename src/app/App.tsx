@@ -8,6 +8,7 @@ import { DataPage } from '../features/csv/DataPage'
 import { ReportPage } from '../features/csv/ReportPage'
 import { EditExpensePage, ExpenseDetailPage, ExpensesPage, NewExpensePage } from '../features/expenses/ExpensePages'
 import { PeoplePage } from '../features/people/PeoplePage'
+import { SharePage } from '../features/quick/SharePage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { RatesPage } from '../features/rates/RatesPage'
 import { SettingsPage } from '../features/settings/SettingsPage'
@@ -22,7 +23,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
   const { user, ready } = useAuth()
   const location = useLocation()
   if (!ready) return <Loading />
-  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
   return children
 }
 
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: '/', element: <TripsPage /> },
       { path: '/trips/new', element: <NewTripPage /> },
       { path: '/profile', element: <ProfilePage /> },
+      { path: '/share', element: <SharePage /> },
       {
         path: '/trips/:tripId',
         element: <TripLayout />,

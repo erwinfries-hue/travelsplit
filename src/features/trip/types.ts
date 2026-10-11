@@ -10,6 +10,8 @@ export interface Trip {
   admin_user_id: string
   version: number
   created_at: string
+  /** Short code for quick entries ("#GEO27 Taxi 20 EUR"); see the WhatsApp adapter. */
+  trip_code?: string | null
 }
 
 export interface Person {
