@@ -6,6 +6,7 @@ import { ExpenseRow } from '../expenses/ExpenseRow'
 import { TransferRow } from '../balances/TransferRow'
 import { currenciesUsed, liveExpenses, suggestions, totalSpent } from './derive'
 import { useTripContext } from './TripLayout'
+import { DraftList } from '../expenses/DraftList'
 
 export function TripPage() {
   const { t } = useTranslation()
@@ -34,6 +35,7 @@ export function TripPage() {
         }
       />
 
+      <DraftList tripId={trip.id} />
       {pendingForMe.length > 0 && (
         <Link to={`/trips/${trip.id}/balances`}>
           <Card tone="amber" className="mb-3 text-sm font-semibold">

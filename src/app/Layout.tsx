@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useParams } from 'react-router'
+import { syncDrafts } from '../lib/drafts'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './auth'
 
@@ -64,6 +65,11 @@ export function Layout() {
   const { t } = useTranslation()
   const { tripId } = useParams()
   const online = useOnline()
+  // Send offline drafts whenever the app starts or the connection comes back.
+  const { user } = useAuth()
+  useEffect(() => {
+    if (online && user) void syncDrafts(user.id)
+  }, [online, user])
   const unread = useUnreadNotices()
   const currentTrip = tripId ?? lastTrip()
 

@@ -9,8 +9,10 @@ import { supabase } from '../../lib/supabase'
 import { baseTotals, canEditExpense, CATEGORY_ICON } from '../trip/derive'
 import { useTripContext } from '../trip/TripLayout'
 import { personName } from '../trip/useTrip'
+import { DraftList } from './DraftList'
 import { ExpenseForm } from './ExpenseForm'
 import { ExpenseRow } from './ExpenseRow'
+import { ReceiptSection } from './ReceiptSection'
 
 export function ExpensesPage() {
   const { t } = useTranslation()
@@ -33,6 +35,7 @@ export function ExpensesPage() {
           {t('expenses.showDeleted')}
         </label>
       </div>
+      <DraftList tripId={data.trip.id} />
       {list.length === 0 ? (
         <Empty>{t('expenses.none')}</Empty>
       ) : (
@@ -175,6 +178,8 @@ export function ExpenseDetailPage() {
           )}
         </dl>
       </Card>
+
+      <ReceiptSection data={data} expenseId={expense.id} editable={editable} onChanged={reload} />
 
       <Section title={t('expenses.splitTitle')}>
         <Card>

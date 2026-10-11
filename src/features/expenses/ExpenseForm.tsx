@@ -18,11 +18,14 @@ import {
   type SplitInput,
   type SplitMode,
 } from '../../domain/money'
+import { type ExpenseArgs, saveDraft } from '../../lib/drafts'
 import { minorToInput, money } from '../../lib/format'
 import { newId } from '../../lib/ids'
+import { uploadReceipt } from '../../lib/receipts'
 import { type AppError, rpc, toAppError } from '../../lib/rpc'
 import { CATEGORIES, CATEGORY_ICON } from '../trip/derive'
 import type { Expense, TripData } from '../trip/types'
+import { ReceiptPicker } from './ReceiptPicker'
 
 function today(): string {
   const d = new Date()
@@ -66,6 +69,7 @@ export function ExpenseForm({ data, existing }: { data: TripData; existing?: Exp
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<AppError | null>(null)
   const idempotencyKey = useRef(newId())
+  const [photo, setPhoto] = useState<Blob | null>(null)
 
   const rateSheet = useMemo(() => new Map(data.rates.map((r) => [r.currency, parseRate(r.eur_per_unit)])), [data.rates])
   const missingRate = currency !== data.trip.base_currency && [currency, data.trip.base_currency].some((c) => c !== 'EUR' && !rateSheet.has(c))
@@ -106,7 +110,7 @@ export function ExpenseForm({ data, existing }: { data: TripData; existing?: Exp
       person_id,
       value: mode === 'equal' ? null : mode === 'fixed' ? parseAmountOrZero(values[person_id] ?? '', currency).toString() : parsePercent(values[person_id] || '0').toString(),
     }))
-    const common = {
+    const common: ExpenseArgs = {
       p_title: title.trim(),
       p_expense_date: expenseDate,
       p_currency: currency,
@@ -122,13 +126,40 @@ export function ExpenseForm({ data, existing }: { data: TripData; existing?: Exp
         await rpc('update_expense', { ...common, p_expense_id: existing.id, p_expected_revision: existing.revision, p_reason: reason.trim() || null })
         navigate(`/trips/${data.trip.id}/expenses/${existing.id}`, { replace: true })
       } else {
-        const id = await rpc<string>('create_expense', { ...common, p_trip_id: data.trip.id, p_idempotency_key: idempotencyKey.current })
-        navigate(`/trips/${data.trip.id}/expenses/${id}`, { replace: true })
+        await createNew(common)
       }
     } catch (e) {
       setError(toAppError(e))
       setBusy(false)
     }
+  }
+
+  // New expenses survive a missing connection as a local draft (sent later with the same idempotency key).
+  const createNew = async (args: ExpenseArgs) => {
+    const draft = {
+      id: idempotencyKey.current, userId: user!.id, tripId: data.trip.id, createdAt: new Date().toISOString(),
+      args, photo, expenseId: null as string | null, lastError: null,
+    }
+    const keepAsDraft = async (expenseId: string | null) => {
+      await saveDraft({ ...draft, expenseId })
+      navigate(`/trips/${data.trip.id}/expenses`, { replace: true })
+    }
+    if (!navigator.onLine) return keepAsDraft(null)
+    let id: string
+    try {
+      id = await rpc<string>('create_expense', { ...args, p_trip_id: data.trip.id, p_idempotency_key: idempotencyKey.current })
+    } catch (e) {
+      if (toAppError(e).code === 'network_error') return keepAsDraft(null)
+      throw e
+    }
+    if (photo) {
+      try {
+        await uploadReceipt(data.trip.id, id, photo)
+      } catch {
+        return keepAsDraft(id)
+      }
+    }
+    navigate(`/trips/${data.trip.id}/expenses/${id}`, { replace: true })
   }
 
   const baseCur = data.trip.base_currency
@@ -298,6 +329,11 @@ export function ExpenseForm({ data, existing }: { data: TripData; existing?: Exp
         <Field label={t('expenses.noteOptional')} htmlFor="exp-note">
           <TextArea id="exp-note" rows={2} maxLength={1000} value={note} onChange={(e) => setNote(e.target.value)} />
         </Field>
+        {!existing && (
+          <Field label={t('receipts.title')} htmlFor="exp-receipt">
+            <ReceiptPicker id="exp-receipt" value={photo} onChange={setPhoto} />
+          </Field>
+        )}
         {existing && (
           <Field label={t('expenses.changeReason')} htmlFor="exp-reason">
             <Input id="exp-reason" maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} />

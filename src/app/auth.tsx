@@ -2,6 +2,7 @@ import type { Session, User } from '@supabase/supabase-js'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { rpc } from '../lib/rpc'
 import { supabase } from '../lib/supabase'
+import { clearTripCache } from '../features/trip/useTrip'
 
 export interface Capabilities {
   can_create_trips: boolean
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       capabilities,
       refreshCapabilities,
       signOut: async () => {
+        clearTripCache()
         await supabase.auth.signOut()
       },
     }),

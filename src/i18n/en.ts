@@ -87,6 +87,7 @@ export const en: Dictionary = {
     confirmedSettlements: 'Confirmed repayments',
     recent: 'Recent expenses',
     manage: 'Manage',
+    offlineCopy: 'Offline: data from {{date}}. New expenses are saved as drafts.',
     archivedBanner: 'This trip is archived and read-only.',
   },
   expenses: {
@@ -124,6 +125,26 @@ export const en: Dictionary = {
     unknownActor: 'Unknown',
     none: 'No expenses yet.',
     search: 'Search',
+  },
+  receipts: {
+    title: 'Receipt',
+    add: 'Take or choose a photo',
+    processing: 'Shrinking …',
+    preview: 'Receipt photo',
+    size: '{{kb}} KB, without location and camera data',
+    remove: 'Remove',
+    replace: 'Replace',
+    upload: 'Save receipt',
+    none: 'No receipt.',
+    privacy: 'The photo is shrunk before upload. Location and camera data are removed.',
+  },
+  drafts: {
+    title: 'Not sent',
+    explain: 'These expenses are only stored on this device and do not count in the balances yet. They are sent automatically once you are online.',
+    notSent: 'Draft',
+    photoPending: 'Expense booked, photo still missing',
+    sendNow: 'Send now',
+    discard: 'Discard',
   },
   categories: {
     transport: 'Transport',
@@ -390,5 +411,7 @@ export const en: Dictionary = {
     claim_not_pending: 'The request is no longer open.',
     claim_pending: 'A request for this person is already open.',
     receipt_not_uploaded: 'The receipt was not uploaded.',
+    image_unreadable: 'The image could not be read.',
+    image_too_large: 'Even after shrinking, the image is larger than 1 MB.',
   },
 }

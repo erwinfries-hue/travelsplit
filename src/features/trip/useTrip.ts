@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../app/auth'
 import { AppError, rpc, toAppError } from '../../lib/rpc'
 import { supabase } from '../../lib/supabase'
-import type { BaseShare, Expense, Person, Rate, Reversal, Settlement, Split, Trip, TripData } from './types'
+import type { BaseShare, Expense, Person, Rate, Receipt, Reversal, Settlement, Split, Trip, TripData } from './types'
 
 async function must<T>(query: PromiseLike<{ data: T | null; error: unknown }>): Promise<T> {
   const { data, error } = await query
@@ -13,7 +13,7 @@ async function must<T>(query: PromiseLike<{ data: T | null; error: unknown }>): 
 export async function loadTrip(tripId: string, userId: string): Promise<TripData> {
   const trip = await must<Trip | null>(supabase.from('trips').select('*').eq('id', tripId).maybeSingle())
   if (!trip) throw new AppError('trip_not_found')
-  const [people, rates, expenses, splits, baseShares, balanceRows, settlements, reversals] = await Promise.all([
+  const [people, rates, expenses, splits, baseShares, balanceRows, settlements, reversals, receipts] = await Promise.all([
     must<Person[]>(supabase.from('trip_people').select('id, display_name, linked_user_id, status').eq('trip_id', tripId).order('created_at')),
     must<Rate[]>(supabase.from('trip_fx_rates').select('currency, eur_per_unit::text, revision, rate_date, updated_at').eq('trip_id', tripId).order('currency')),
     must<Expense[]>(supabase.from('expenses').select('*').eq('trip_id', tripId).order('expense_date', { ascending: false }).order('created_at', { ascending: false })),
@@ -28,6 +28,7 @@ export async function loadTrip(tripId: string, userId: string): Promise<TripData
         .order('created_at', { ascending: false }),
     ),
     must<Reversal[]>(supabase.from('settlement_reversals').select('id, settlement_id, reason, reversed_base_minor, created_at').eq('trip_id', tripId)),
+    must<Receipt[]>(supabase.from('receipt_files').select('expense_id, storage_path, size_bytes, created_by').eq('trip_id', tripId)),
   ])
   const me = people.find((p) => p.linked_user_id === userId && p.status === 'active')
   return {
@@ -40,8 +41,42 @@ export async function loadTrip(tripId: string, userId: string): Promise<TripData
     balances: new Map(balanceRows.map((b) => [b.person_id, BigInt(b.balance_minor)])),
     settlements,
     reversals,
+    receipts,
     myPersonId: me?.id ?? null,
     isAdmin: trip.admin_user_id === userId,
+  }
+}
+
+// Last good copy per user and trip, so the trip (and the expense form) still opens without a connection.
+// Removed on sign-out. Never used while the server is reachable.
+export const TRIP_CACHE_PREFIX = 'travelsplit.trip.'
+const cacheKey = (userId: string, tripId: string) => `${TRIP_CACHE_PREFIX}${userId}.${tripId}`
+
+function writeCache(userId: string, data: TripData) {
+  try {
+    const json = JSON.stringify({ savedAt: new Date().toISOString(), data: { ...data, balances: [...data.balances].map(([k, v]) => [k, v.toString()]) } })
+    localStorage.setItem(cacheKey(userId, data.trip.id), json)
+  } catch {
+    /* storage full or unavailable */
+  }
+}
+
+function readCache(userId: string, tripId: string): { savedAt: string; data: TripData } | null {
+  try {
+    const raw = localStorage.getItem(cacheKey(userId, tripId))
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as { savedAt: string; data: Omit<TripData, 'balances'> & { balances: [string, string][] } }
+    return { savedAt: parsed.savedAt, data: { ...parsed.data, balances: new Map(parsed.data.balances.map(([k, v]) => [k, BigInt(v)])) } }
+  } catch {
+    return null
+  }
+}
+
+export function clearTripCache() {
+  try {
+    for (const key of Object.keys(localStorage)) if (key.startsWith(TRIP_CACHE_PREFIX)) localStorage.removeItem(key)
+  } catch {
+    /* ignore */
   }
 }
 
@@ -54,15 +89,34 @@ export function useTrip(tripId: string | undefined) {
   const [error, setError] = useState<AppError | null>(null)
   const [loading, setLoading] = useState(true)
   const [live, setLive] = useState(false)
+  const [staleSince, setStaleSince] = useState<string | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const reload = useCallback(async () => {
     if (!tripId || !user) return
+    // Known offline: show the last copy at once instead of waiting for requests to time out.
+    const offlineCopy = typeof navigator !== 'undefined' && !navigator.onLine ? readCache(user.id, tripId) : null
+    if (offlineCopy) {
+      setData((current) => current ?? offlineCopy.data)
+      setStaleSince(offlineCopy.savedAt)
+      setLoading(false)
+      return
+    }
     try {
-      setData(await loadTrip(tripId, user.id))
+      const fresh = await loadTrip(tripId, user.id)
+      setData(fresh)
+      setStaleSince(null)
       setError(null)
+      writeCache(user.id, fresh)
     } catch (e) {
-      setError(toAppError(e))
+      const err = toAppError(e)
+      const cached = err.code === 'network_error' ? readCache(user.id, tripId) : null
+      if (cached) {
+        setData((current) => current ?? cached.data)
+        setStaleSince(cached.savedAt)
+      } else {
+        setError(err)
+      }
     } finally {
       setLoading(false)
     }
@@ -72,6 +126,12 @@ export function useTrip(tripId: string | undefined) {
     setLoading(true)
     setData(null)
     void reload()
+  }, [reload])
+
+  useEffect(() => {
+    const onOnline = () => void reload()
+    window.addEventListener('online', onOnline)
+    return () => window.removeEventListener('online', onOnline)
   }, [reload])
 
   useEffect(() => {
@@ -94,7 +154,7 @@ export function useTrip(tripId: string | undefined) {
     // Only resubscribe when the trip or its status changes.
   }, [tripId, user, data?.trip.status, reload])
 
-  return { data, error, loading, live, reload }
+  return { data, error, loading, live, staleSince, reload }
 }
 
 export function personName(data: TripData, personId: string | null | undefined): string {

@@ -20,7 +20,14 @@ export function ExpenseRow({ data, expense }: { data: TripData; expense: Expense
           {CATEGORY_ICON[expense.category ?? 'other']}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold">{expense.title}</p>
+          <p className="truncate font-semibold">
+            {expense.title}
+            {data.receipts.some((r) => r.expense_id === expense.id) && (
+              <span className="ml-1" role="img" aria-label={t('receipts.title')}>
+                📎
+              </span>
+            )}
+          </p>
           <p className="truncate text-xs text-slate-500">
             {date(expense.expense_date)} · {t('expenses.paidBy', { name: personName(data, expense.paid_by_person_id) })}
           </p>

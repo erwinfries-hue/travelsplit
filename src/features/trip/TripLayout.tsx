@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Outlet, useOutletContext, useParams } from 'react-router'
 import { rememberTrip } from '../../app/Layout'
 import { ErrorBox, Loading } from '../../components/ui'
+import { dateTime } from '../../lib/format'
 import type { TripData } from './types'
 import { useTrip } from './useTrip'
 
@@ -15,7 +16,7 @@ export interface TripContext {
 export function TripLayout() {
   const { tripId } = useParams()
   const { t } = useTranslation()
-  const { data, error, loading, live, reload } = useTrip(tripId)
+  const { data, error, loading, live, staleSince, reload } = useTrip(tripId)
 
   useEffect(() => {
     if (data) rememberTrip(data.trip.id)
@@ -26,6 +27,11 @@ export function TripLayout() {
   if (!data) return null
   return (
     <>
+      {staleSince && (
+        <div role="status" className="mb-3 rounded-xl bg-amber-100 px-3 py-2 text-sm font-semibold text-amber-900">
+          {t('trip.offlineCopy', { date: dateTime(staleSince) })}
+        </div>
+      )}
       {data.trip.status === 'archived' && (
         <div className="mb-3 rounded-xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700">{t('trip.archivedBanner')}</div>
       )}

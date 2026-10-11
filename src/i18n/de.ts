@@ -85,6 +85,7 @@ export const de = {
     confirmedSettlements: 'Bestätigte Rückzahlungen',
     recent: 'Letzte Ausgaben',
     manage: 'Verwalten',
+    offlineCopy: 'Offline: Stand vom {{date}}. Neue Ausgaben werden als Entwurf gespeichert.',
     archivedBanner: 'Diese Reise ist archiviert und kann nur noch gelesen werden.',
   },
   expenses: {
@@ -122,6 +123,26 @@ export const de = {
     unknownActor: 'Unbekannt',
     none: 'Noch keine Ausgaben.',
     search: 'Suchen',
+  },
+  receipts: {
+    title: 'Beleg',
+    add: 'Foto aufnehmen oder wählen',
+    processing: 'Wird verkleinert …',
+    preview: 'Belegfoto',
+    size: '{{kb}} KB, ohne Standort- und Kameradaten',
+    remove: 'Entfernen',
+    replace: 'Ersetzen',
+    upload: 'Beleg speichern',
+    none: 'Kein Beleg.',
+    privacy: 'Das Foto wird vor dem Hochladen verkleinert. Standort und Kameradaten werden entfernt.',
+  },
+  drafts: {
+    title: 'Nicht gesendet',
+    explain: 'Diese Ausgaben sind nur auf diesem Gerät gespeichert und zählen noch nicht in den Salden. Sie werden automatisch gesendet, sobald du online bist.',
+    notSent: 'Entwurf',
+    photoPending: 'Ausgabe gebucht, Foto fehlt noch',
+    sendNow: 'Jetzt senden',
+    discard: 'Verwerfen',
   },
   categories: {
     transport: 'Transport',
@@ -388,6 +409,8 @@ export const de = {
     claim_not_pending: 'Die Anfrage ist nicht mehr offen.',
     claim_pending: 'Für diese Person läuft bereits eine Anfrage.',
     receipt_not_uploaded: 'Der Beleg wurde nicht hochgeladen.',
+    image_unreadable: 'Das Bild konnte nicht gelesen werden.',
+    image_too_large: 'Das Bild ist auch verkleinert grösser als 1 MB.',
   },
 }
 

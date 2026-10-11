@@ -85,6 +85,13 @@ export interface Reversal {
   created_at: string
 }
 
+export interface Receipt {
+  expense_id: string
+  storage_path: string
+  size_bytes: number
+  created_by: string
+}
+
 export interface TripData {
   trip: Trip
   people: Person[]
@@ -95,6 +102,7 @@ export interface TripData {
   balances: Map<string, bigint>
   settlements: Settlement[]
   reversals: Reversal[]
+  receipts: Receipt[]
   myPersonId: string | null
   isAdmin: boolean
 }
