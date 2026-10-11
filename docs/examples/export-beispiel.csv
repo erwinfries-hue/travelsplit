@@ -1,18 +1,18 @@
-﻿schema_version;row_type;row_id;ref_id;date;title;person_name;counterparty_name;currency;amount_minor;base_currency;base_amount_minor;split_mode;share_value;rate_scaled;status;category;note;amount_display
-1;"trip";"781e42fa-a9cf-430a-8f66-b04bd7fdb7cb";;"2026-09-20";"Lissabon 2026 (Demo)";;;;;"EUR";;;;;"active";;"end 2026-09-27";
-1;"person";"f4fe5500-9b53-448f-979f-6970bf093957";;;;"Erwin";;;;;;;;;"active";;;
-1;"person";"71361c74-0753-42e4-810e-a2f2934bc236";;;;"Larissa";;;;;;;;;"active";;;
-1;"person";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";;;;"Roger";;;;;;;;;"placeholder";;;
-1;"trip_fx";"CHF";;"2026-09-20";;;;"CHF";;;;;;10650000000;"revision 1";;;"1 CHF = 1.065 EUR"
-1;"expense";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;"2026-09-21";"Apartment Alfama";"Erwin";;"EUR";84000;"EUR";84000;"equal";;;"active";"accommodation";;"840.00 EUR"
-1;"expense_share";"f4fe5500-9b53-448f-979f-6970bf093957";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;;"Erwin";;"EUR";28000;"EUR";28000;"equal";;;;;;"280.00 EUR"
-1;"expense_share";"71361c74-0753-42e4-810e-a2f2934bc236";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;;"Larissa";;"EUR";28000;"EUR";28000;"equal";;;;;;"280.00 EUR"
-1;"expense_share";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;;"Roger";;"EUR";28000;"EUR";28000;"equal";;;;;;"280.00 EUR"
-1;"expense";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;"2026-09-21";"Zugtickets Zürich";"Erwin";;"CHF";21990;"EUR";23419;"equal";;;"active";"transport";;"219.90 CHF"
-1;"expense_share";"f4fe5500-9b53-448f-979f-6970bf093957";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;;"Erwin";;"CHF";7330;"EUR";7806;"equal";;;;;;"73.30 CHF"
-1;"expense_share";"71361c74-0753-42e4-810e-a2f2934bc236";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;;"Larissa";;"CHF";7330;"EUR";7806;"equal";;;;;;"73.30 CHF"
-1;"expense_share";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;;"Roger";;"CHF";7330;"EUR";7807;"equal";;;;;;"73.30 CHF"
-1;"expense";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;"2026-09-21";"Abendessen Time Out Market";"Larissa";;"EUR";9650;"EUR";9650;"equal";;;"active";"food";;"96.50 EUR"
-1;"expense_share";"f4fe5500-9b53-448f-979f-6970bf093957";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;;"Erwin";;"EUR";3216;"EUR";3216;"equal";;;;;;"32.16 EUR"
-1;"expense_share";"71361c74-0753-42e4-810e-a2f2934bc236";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;;"Larissa";;"EUR";3217;"EUR";3217;"equal";;;;;;"32.17 EUR"
-1;"expense_share";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;;"Roger";;"EUR";3217;"EUR";3217;"equal";;;;;;"32.17 EUR"
+﻿schema_version;row_type;row_id;ref_id;date;title;person_name;counterparty_name;currency;amount_minor;base_currency;base_amount_minor;split_mode;share_value;rate_scaled;status;category;note;amount_display;source
+1;"trip";"781e42fa-a9cf-430a-8f66-b04bd7fdb7cb";;"2026-09-20";"Lissabon 2026 (Demo)";;;;;"EUR";;;;;"active";;"end 2026-09-27";;
+1;"person";"f4fe5500-9b53-448f-979f-6970bf093957";;;;"Erwin";;;;;;;;;"active";;;;
+1;"person";"71361c74-0753-42e4-810e-a2f2934bc236";;;;"Larissa";;;;;;;;;"active";;;;
+1;"person";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";;;;"Roger";;;;;;;;;"placeholder";;;;
+1;"trip_fx";"CHF";;"2026-09-20";;;;"CHF";;;;;;10650000000;"revision 1";;;"1 CHF = 1.065 EUR";
+1;"expense";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;"2026-09-21";"Apartment Alfama";"Erwin";;"EUR";84000;"EUR";84000;"equal";;;"active";"accommodation";;"840.00 EUR";"app"
+1;"expense_share";"f4fe5500-9b53-448f-979f-6970bf093957";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;;"Erwin";;"EUR";28000;"EUR";28000;"equal";;;;;;"280.00 EUR";
+1;"expense_share";"71361c74-0753-42e4-810e-a2f2934bc236";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;;"Larissa";;"EUR";28000;"EUR";28000;"equal";;;;;;"280.00 EUR";
+1;"expense_share";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";"b563660a-b042-4dbd-8d3e-ca6c07b91db4";;;"Roger";;"EUR";28000;"EUR";28000;"equal";;;;;;"280.00 EUR";
+1;"expense";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;"2026-09-21";"Zugtickets Zürich";"Erwin";;"CHF";21990;"EUR";23419;"equal";;;"active";"transport";;"219.90 CHF";"app"
+1;"expense_share";"f4fe5500-9b53-448f-979f-6970bf093957";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;;"Erwin";;"CHF";7330;"EUR";7806;"equal";;;;;;"73.30 CHF";
+1;"expense_share";"71361c74-0753-42e4-810e-a2f2934bc236";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;;"Larissa";;"CHF";7330;"EUR";7806;"equal";;;;;;"73.30 CHF";
+1;"expense_share";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";"bdd17340-6cb3-4267-98ef-5fc61abb6416";;;"Roger";;"CHF";7330;"EUR";7807;"equal";;;;;;"73.30 CHF";
+1;"expense";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;"2026-09-21";"Abendessen Time Out Market";"Larissa";;"EUR";9650;"EUR";9650;"equal";;;"active";"food";;"96.50 EUR";"app"
+1;"expense_share";"f4fe5500-9b53-448f-979f-6970bf093957";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;;"Erwin";;"EUR";3216;"EUR";3216;"equal";;;;;;"32.16 EUR";
+1;"expense_share";"71361c74-0753-42e4-810e-a2f2934bc236";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;;"Larissa";;"EUR";3217;"EUR";3217;"equal";;;;;;"32.17 EUR";
+1;"expense_share";"62c08f7d-4f2e-4ade-893e-97e92c9b4aa4";"4015f747-cca7-412e-a7c9-90a7f2ee2cdb";;;"Roger";;"EUR";3217;"EUR";3217;"equal";;;;;;"32.17 EUR";

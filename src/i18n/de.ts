@@ -290,6 +290,8 @@ export const de = {
     noLiveRates: 'Es werden keine Live-Kurse geladen.',
   },
   settings: {
+    tripCode: 'Reisecode',
+    tripCodeHint: 'Optional, 2 bis 12 Buchstaben oder Ziffern. Mit #CODE am Anfang einer Schnellerfassung oder geteilten Nachricht landet sie in dieser Reise. Der Code ist kein Passwort.',
     title: 'Einstellungen',
     details: 'Reisedaten',
     baseCurrencyLock: 'Die Basiswährung ist gesperrt, weil schon Ausgaben bestehen.',

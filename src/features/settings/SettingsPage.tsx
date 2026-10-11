@@ -17,6 +17,7 @@ export function SettingsPage() {
   const [start, setStart] = useState(trip.start_date ?? '')
   const [end, setEnd] = useState(trip.end_date ?? '')
   const [target, setTarget] = useState('')
+  const [code, setCode] = useState(trip.trip_code ?? '')
   const [acceptOpen, setAcceptOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<AppError | null>(null)
@@ -83,6 +84,35 @@ export function SettingsPage() {
                 </Field>
               </div>
               <Button type="submit" busy={busy}>
+                {t('common.save')}
+              </Button>
+            </form>
+          </Card>
+        </Section>
+      )}
+
+      {trip.status === 'active' && (
+        <Section title={t('settings.tripCode')}>
+          <Card>
+            <form
+              className="flex flex-col gap-3"
+              onSubmit={(e) => {
+                e.preventDefault()
+                void act(() => rpc('set_trip_code', { p_trip_id: trip.id, p_code: code.trim() || null }))
+              }}
+            >
+              <Field label={t('settings.tripCode')} hint={t('settings.tripCodeHint')} htmlFor="set-code">
+                <Input
+                  id="set-code"
+                  maxLength={12}
+                  pattern="[A-Za-z0-9]{2,12}"
+                  autoCapitalize="characters"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  placeholder="GEO27"
+                />
+              </Field>
+              <Button type="submit" variant="secondary" busy={busy}>
                 {t('common.save')}
               </Button>
             </form>

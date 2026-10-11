@@ -40,7 +40,9 @@ $PSQL "$RESTORE_DB_URL" -Atc "select version from supabase_migrations.schema_mig
 node "$HERE/manifest.mjs" check-migrations "$WORK" "$WORK/target-migrations.txt"
 
 echo "Loading data in one transaction ..."
-$PSQL "$RESTORE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -q -f "$WORK/db/data.sql" > /dev/null
+# Migrations seed singleton rows (e.g. private.whatsapp_config); the backup carries their real values.
+{ echo "delete from private.whatsapp_config;"; cat "$WORK/db/data.sql"; } |
+  $PSQL "$RESTORE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -q -f - > /dev/null
 
 echo "Uploading storage ..."
 node "$HERE/storage.mjs" import "$WORK/storage"

@@ -8,6 +8,7 @@ import { dateRange, money } from '../../lib/format'
 import { type AppError, rpc, toAppError } from '../../lib/rpc'
 import { supabase } from '../../lib/supabase'
 import type { Person, Trip } from '../trip/types'
+import { WhatsAppReview } from '../quick/WhatsAppReview'
 
 interface TripRow {
   trip: Trip
@@ -87,6 +88,7 @@ export function TripsPage() {
           {t('trips.claimPending', { trip: c.trips?.title ?? '' })}
         </Card>
       ))}
+      <WhatsAppReview tripId={null} />
       {!rows && !error ? (
         <Loading />
       ) : (

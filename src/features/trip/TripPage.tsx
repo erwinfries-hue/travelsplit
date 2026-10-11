@@ -8,6 +8,7 @@ import { currenciesUsed, liveExpenses, suggestions, totalSpent } from './derive'
 import { useTripContext } from './TripLayout'
 import { DraftList } from '../expenses/DraftList'
 import { QuickEntry } from '../quick/QuickEntry'
+import { WhatsAppReview } from '../quick/WhatsAppReview'
 
 export function TripPage() {
   const { t } = useTranslation()
@@ -40,6 +41,7 @@ export function TripPage() {
 
       {trip.status === 'active' && data.myPersonId && <QuickEntry key={shared} data={data} initialText={shared} />}
       <DraftList tripId={trip.id} />
+      <WhatsAppReview tripId={trip.id} />
       {pendingForMe.length > 0 && (
         <Link to={`/trips/${trip.id}/balances`}>
           <Card tone="amber" className="mb-3 text-sm font-semibold">

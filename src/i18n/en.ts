@@ -292,6 +292,8 @@ export const en: Dictionary = {
     noLiveRates: 'No live rates are loaded.',
   },
   settings: {
+    tripCode: 'Trip code',
+    tripCodeHint: 'Optional, 2 to 12 letters or digits. Starting a quick entry or shared message with #CODE sends it to this trip. The code is not a password.',
     title: 'Settings',
     details: 'Trip details',
     baseCurrencyLock: 'The base currency is locked because expenses exist.',
