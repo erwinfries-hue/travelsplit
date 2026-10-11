@@ -1,6 +1,6 @@
 # WA2: Checkliste für eine spätere Aktivierung
 
-**Nicht starten**, solange WA0 rot ist ([WA-BLOCKED.md](WA-BLOCKED.md)). Jeder Schritt mit Kosten oder Konto braucht
+**Nicht starten**, solange WA0 rot ist ([wa-blockers.md](wa-blockers.md)). Jeder Schritt mit Kosten oder Konto braucht
 Erwins ausdrückliche Zustimmung.
 
 ## 1. Voraussetzungen (Erwin)

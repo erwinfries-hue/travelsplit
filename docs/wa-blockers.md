@@ -1,4 +1,4 @@
-# WA-BLOCKED: WhatsApp-Bot nicht aktiviert
+# WA-Blocker (WA-BLOCKED): WhatsApp-Bot nicht aktiviert
 
 **Status:** BLOCKED (WA0 rot) · **Stand:** 11.10.2026
 

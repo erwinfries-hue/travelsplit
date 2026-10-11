@@ -26,7 +26,12 @@ npm run build && npm run check:bundle-secrets
 
 ## Dokumentation
 
-- [docs/p0-abnahmebericht.md](docs/p0-abnahmebericht.md): Stand P0, Nachweise, offene Punkte
+- [docs/p1-abnahmebericht.md](docs/p1-abnahmebericht.md): Stand P1, Nachweise, Risiken, Empfehlung
+- [docs/p0-abnahmebericht.md](docs/p0-abnahmebericht.md): Stand P0
+- [docs/installation-und-betrieb.md](docs/installation-und-betrieb.md): Konten, Google-Login, Supabase, Cloudflare, Handy-Installation
+- [docs/handbuch.md](docs/handbuch.md) / [docs/handbook.md](docs/handbook.md): Benutzer- und Admin-Handbuch
+- [docs/red-team-traceability.md](docs/red-team-traceability.md): Angriffe und Tests
+- WhatsApp: [WA0](docs/wa0-eligibility-cost-check.md), [Blocker](docs/wa-blockers.md), [WA1-Tests](docs/wa1-security-test-results.md), [WA2](docs/wa2-activation-checklist.md)
 - [docs/backup-restore.md](docs/backup-restore.md): Betreiber-Anleitung Backup und Wiederherstellung (R4)
 - [docs/betreiber-runbook.md](docs/betreiber-runbook.md): Freigaben, Admin-Recovery, verlorene Gastzugänge
 - [docs/csv-schema-v1.md](docs/csv-schema-v1.md): CSV-Format für Export und Import, Beispiele in `docs/examples/`
@@ -35,4 +40,4 @@ npm run build && npm run check:bundle-secrets
 
 Im Frontend gibt es nur die öffentliche Supabase-URL und den Publishable Key. Service-Role-/Secret-Key,
 Datenbankpasswort und Google-Client-Secret gehören nie ins Repository oder ins Bundle
-(`npm run check:bundle-secrets` prüft das). WhatsApp ist nicht angebunden (`WHATSAPP_MODE=off`).
+(`npm run check:bundle-secrets` prüft das). Der WhatsApp-Adapter ist vorbereitet, aber ausgeschaltet (`WHATSAPP_MODE=off`, kein Meta-Konto).

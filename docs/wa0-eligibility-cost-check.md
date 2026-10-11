@@ -17,7 +17,7 @@ Grundlage: WhatsApp-Spezifikation v1.2 §2, §3, §8 (WA0). Keine Rechtsberatung
 
 ## Entscheidung
 
-Der echte WhatsApp-Bot bleibt **blockiert** (siehe [WA-BLOCKED.md](WA-BLOCKED.md)). Gebaut und getestet ist nur die
+Der echte WhatsApp-Bot bleibt **blockiert** (siehe [wa-blockers.md](wa-blockers.md)). Gebaut und getestet ist nur die
 vorbereitete Architektur mit synthetischen Nachrichten ([wa1-security-test-results.md](wa1-security-test-results.md)).
 Als sofort nutzbarer, kostenloser Ersatz gibt es die **Schnellerfassung** im Reise-Cockpit und das **Teilen aus WhatsApp**
 an TravelSplit (Android). Beides füllt nur das normale Formular vor; gespeichert wird erst nach Prüfung.
