@@ -323,6 +323,7 @@ export const de = {
     settings: 'Einstellungen',
     install: 'App installieren',
     installIos: 'iPhone: In Safari auf «Teilen» tippen und «Zum Home-Bildschirm» wählen.',
+    installNow: 'Jetzt installieren',
     installAndroid: 'Android: Im Chrome-Menü «App installieren» wählen.',
     signOut: 'Abmelden',
     upgradeHint: 'Verknüpfe deinen Gastzugang mit Google. Du bleibst in allen Reisen und kannst dich danach auf jedem Gerät anmelden.',

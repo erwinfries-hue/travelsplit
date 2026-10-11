@@ -325,6 +325,7 @@ export const en: Dictionary = {
     settings: 'Settings',
     install: 'Install app',
     installIos: 'iPhone: in Safari tap “Share” and choose “Add to Home Screen”.',
+    installNow: 'Install now',
     installAndroid: 'Android: choose “Install app” in the Chrome menu.',
     signOut: 'Sign out',
     upgradeHint: 'Link your guest access to Google. You stay in all trips and can sign in on any device afterwards.',

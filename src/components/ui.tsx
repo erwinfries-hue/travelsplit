@@ -22,9 +22,10 @@ export function Button({
     <button
       type="button"
       className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold transition-colors ${variants[variant]} ${className}`}
+      {...props}
+      // After the spread, so a busy button can never be pressed twice.
       disabled={busy || props.disabled}
       aria-busy={busy || undefined}
-      {...props}
     >
       {busy && <Spinner small />}
       {children}

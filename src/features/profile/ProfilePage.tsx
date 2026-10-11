@@ -5,6 +5,7 @@ import { useAuth } from '../../app/auth'
 import { LanguageSwitch } from '../../components/LanguageSwitch'
 import { Badge, Button, Card, Empty, ErrorBox, Field, Input, PageHeader, Section } from '../../components/ui'
 import { dateTime } from '../../lib/format'
+import { isStandalone, useInstallPrompt } from '../../lib/install'
 import { type AppError, rpc, toAppError } from '../../lib/rpc'
 import { supabase } from '../../lib/supabase'
 
@@ -26,6 +27,7 @@ export function ProfilePage() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<AppError | null>(null)
   const [saved, setSaved] = useState(false)
+  const install = useInstallPrompt()
   const [linkError, setLinkError] = useState<AppError | null>(null)
 
   const load = useCallback(async () => {
@@ -151,12 +153,15 @@ export function ProfilePage() {
         </Card>
       </Section>
 
-      <Section title={t('profile.install')}>
-        <Card className="text-sm">
-          <p>{t('profile.installAndroid')}</p>
-          <p className="mt-2">{t('profile.installIos')}</p>
-        </Card>
-      </Section>
+      {!isStandalone() && (
+        <Section title={t('profile.install')}>
+          <Card className="flex flex-col gap-2 text-sm">
+            {install && <Button onClick={() => void install()}>📲 {t('profile.installNow')}</Button>}
+            <p>{t('profile.installAndroid')}</p>
+            <p>{t('profile.installIos')}</p>
+          </Card>
+        </Section>
+      )}
 
       <Button variant="ghost" className="mt-6 w-full text-red-700" onClick={() => void signOut()}>
         {capabilities?.is_anonymous ? t('profile.signOutGuest') : t('profile.signOut')}

@@ -4,6 +4,7 @@
   --color-navy-50: #eef3fa;
   --color-navy-100: #dbe5f3;
   --color-navy-600: #1d4f8c;
+  --color-navy-700: #174476;
   --color-navy-800: #123a6b;
   --color-navy-900: #0f2a4a;
   --color-brand-50: #ecfaf1;
@@ -20,6 +21,19 @@ html {
 
 body {
   @apply bg-slate-50 text-navy-900 antialiased;
+}
+
+/* Visible keyboard focus (A11y). */
+:focus-visible {
+  outline: 3px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* Large touch targets everywhere (UX §8). */
