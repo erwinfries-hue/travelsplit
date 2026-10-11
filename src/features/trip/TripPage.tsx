@@ -126,6 +126,9 @@ export function TripPage() {
         <LinkButton variant="secondary" to={`/trips/${trip.id}/rates`}>
           💱 {t('rates.title')}
         </LinkButton>
+        <LinkButton variant="secondary" to={`/trips/${trip.id}/data`} className="col-span-2">
+          📤 {t('data.title')}
+        </LinkButton>
         {data.isAdmin && (
           <LinkButton variant="secondary" to={`/trips/${trip.id}/settings`} className="col-span-2">
             ⚙️ {t('settings.title')} <Badge tone="blue">{t('people.admin')}</Badge>

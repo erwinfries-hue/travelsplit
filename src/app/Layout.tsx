@@ -97,18 +97,18 @@ export function Layout() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-xl flex-col">
+    <div className="mx-auto flex min-h-dvh max-w-xl flex-col print:max-w-none">
       {!online && (
-        <div role="status" className="bg-amber-500 px-4 py-2 text-center text-sm font-semibold text-white">
+        <div role="status" className="bg-amber-500 px-4 print:hidden py-2 text-center text-sm font-semibold text-white">
           {t('common.offline')}
         </div>
       )}
-      <main className="flex-1 px-4 pt-4 pb-28">
+      <main className="flex-1 px-4 pt-4 pb-28 print:p-0">
         <Outlet />
       </main>
       <nav
         aria-label={t('nav.main')}
-        className="fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-xl border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)]"
+        className="fixed inset-x-0 bottom-0 z-10 print:hidden mx-auto flex max-w-xl border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)]"
       >
         {tab('/', '🧳', t('nav.trips'))}
         {tab(currentTrip ? `/trips/${currentTrip}/expenses` : null, '🧾', t('nav.expenses'))}

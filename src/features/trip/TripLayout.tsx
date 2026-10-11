@@ -28,7 +28,7 @@ export function TripLayout() {
   return (
     <>
       {staleSince && (
-        <div role="status" className="mb-3 rounded-xl bg-amber-100 px-3 py-2 text-sm font-semibold text-amber-900">
+        <div role="status" className="mb-3 rounded-xl bg-amber-100 print:hidden px-3 py-2 text-sm font-semibold text-amber-900">
           {t('trip.offlineCopy', { date: dateTime(staleSince) })}
         </div>
       )}

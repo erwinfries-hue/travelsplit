@@ -17,7 +17,8 @@
     "db:reset": "supabase db reset",
     "check:bundle-secrets": "node scripts/check-bundle-secrets.mjs",
     "seed:dev": "node scripts/dev-seed.mjs",
-    "probe:backup": "node scripts/backup/probe.mjs"
+    "probe:backup": "node scripts/backup/probe.mjs",
+    "test:csv-office": "node --experimental-strip-types tests/office/csv-injection.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

@@ -4,6 +4,8 @@ import { Loading } from '../components/ui'
 import { JoinPage } from '../features/auth/JoinPage'
 import { LoginPage } from '../features/auth/LoginPage'
 import { BalancesPage } from '../features/balances/BalancesPage'
+import { DataPage } from '../features/csv/DataPage'
+import { ReportPage } from '../features/csv/ReportPage'
 import { EditExpensePage, ExpenseDetailPage, ExpensesPage, NewExpensePage } from '../features/expenses/ExpensePages'
 import { PeoplePage } from '../features/people/PeoplePage'
 import { ProfilePage } from '../features/profile/ProfilePage'
@@ -50,6 +52,8 @@ const router = createBrowserRouter([
           { path: 'people', element: <PeoplePage /> },
           { path: 'rates', element: <RatesPage /> },
           { path: 'settings', element: <SettingsPage /> },
+          { path: 'data', element: <DataPage /> },
+          { path: 'report', element: <ReportPage /> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },
