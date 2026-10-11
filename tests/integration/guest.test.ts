@@ -47,7 +47,7 @@ describe('Gastzugang', () => {
     const { error } = await guest.client.auth.refreshSession()
     expect(error).toBeNull()
 
-    expect(await rpc(guest.client, 'my_capabilities')).toEqual({ is_anonymous: false, has_google: true, can_create_trips: false })
+    expect(await rpc(guest.client, 'my_capabilities')).toEqual({ is_anonymous: false, has_google: true, can_create_trips: false, whatsapp_mode: 'off' })
     expect(await balances(guest, tripId)).toEqual(before)
     const { data: me } = await guest.client.from('trip_people').select('id').eq('trip_id', tripId).eq('linked_user_id', guest.id).single()
     expect(me!.id).toBe(personIds.Roger)

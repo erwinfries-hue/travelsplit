@@ -55,3 +55,11 @@ describe('Schnellerfassung / WhatsApp-Parser', () => {
     expect(ok('bestätige Zahlung 50 EUR').participants).toBeNull()
   })
 })
+
+describe('payer words', () => {
+  it('never reads the payer from the text', () => {
+    expect(parseEntry('Erwin hat für alle bezahlt 30 EUR alle')).toEqual({ ok: false, reason: 'payer_in_text' })
+    expect(parseEntry('Paid by Larissa 30 EUR all')).toEqual({ ok: false, reason: 'payer_in_text' })
+    expect(parseEntry('Parkplatz 30 EUR alle').ok).toBe(true)
+  })
+})

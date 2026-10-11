@@ -1,4 +1,4 @@
-import { MoneyError } from './currencies'
+import { MoneyError } from './currencies.ts'
 
 /** Round numerator/denominator (both non-negative, denominator > 0) half-up to an integer. */
 export function divRoundHalfUp(numerator: bigint, denominator: bigint): bigint {

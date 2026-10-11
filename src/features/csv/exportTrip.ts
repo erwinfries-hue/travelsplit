@@ -33,7 +33,7 @@ export function exportRows(data: TripData): CsvRow[] {
       person_name: name(e.paid_by_person_id), currency: e.currency, amount_minor: e.original_minor,
       base_currency: base, base_amount_minor: e.deleted_at ? null : (baseTotal.get(e.id) ?? null), split_mode: e.split_mode,
       status: e.deleted_at ? 'deleted' : e.admin_reconstruction ? 'admin_reconstruction' : 'active',
-      category: e.category, note: e.note, amount_display: display(e.original_minor, e.currency),
+      category: e.category, note: e.note, amount_display: display(e.original_minor, e.currency), source: e.source,
     })
     for (const s of data.splits.filter((x) => x.expense_id === e.id).sort((a, b) => name(a.person_id).localeCompare(name(b.person_id)))) {
       rows.push({

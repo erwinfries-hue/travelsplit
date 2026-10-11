@@ -54,7 +54,7 @@ describe('UX-03: Übersetzungen', () => {
   })
 
   it('jede Verlaufsaktion und jede Mitteilung hat einen Text', () => {
-    const actions = [...sql.matchAll(/'((?:trip|person|expense|fx|settlement|invitation|claim|operator|import)\.[a-z_]+)'/g)].map((m) => m[1])
+    const actions = [...sql.matchAll(/'((?:trip|person|expense|fx|settlement|invitation|claim|operator|import|whatsapp)\.[a-z_]+)'/g)].map((m) => m[1])
     expect(unique(actions).filter((a) => !DE.has(`audit.${a}`))).toEqual([])
     const kinds = [
       ...sql.matchAll(/notify_(?:user|members)\([^;]*?'([a-z_]+)'\s*,\s*(?:jsonb_build_object|'\{\}')/gs),

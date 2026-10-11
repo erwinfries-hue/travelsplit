@@ -1,5 +1,5 @@
-import { MoneyError } from './currencies'
-import { allocate } from './rational'
+import { MoneyError } from './currencies.ts'
+import { allocate } from './rational.ts'
 
 export type SplitMode = 'equal' | 'fixed' | 'percent'
 

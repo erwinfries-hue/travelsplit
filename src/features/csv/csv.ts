@@ -25,6 +25,8 @@ export const CSV_COLUMNS = [
   'category',
   'note',
   'amount_display',
+  // Added in v1 without breaking older files: readers go by header name, the importer ignores it.
+  'source',
 ] as const
 
 export type CsvColumn = (typeof CSV_COLUMNS)[number]

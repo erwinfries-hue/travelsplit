@@ -139,7 +139,10 @@ export function ReportPage() {
             .map((e) => (
               <tr key={e.id} className="break-inside-avoid">
                 <td className={`${td} whitespace-nowrap`}>{date(e.expense_date)}</td>
-                <td className={td}>{e.title}</td>
+                <td className={td}>
+                  {e.title}
+                  {e.source !== 'app' && <span className="text-xs text-slate-500"> ({t(`expenses.source.${e.source}`)})</span>}
+                </td>
                 <td className={td}>{personName(data, e.paid_by_person_id)}</td>
                 <td className={`${td} ${num} whitespace-nowrap`}>{money(e.original_minor, e.currency)}</td>
                 <td className={`${td} ${num} whitespace-nowrap`}>{money(baseTotals.get(e.id) ?? 0, base)}</td>

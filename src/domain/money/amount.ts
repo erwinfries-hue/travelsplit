@@ -1,4 +1,4 @@
-import { currencyExponent, MoneyError } from './currencies'
+import { currencyExponent, MoneyError } from './currencies.ts'
 
 /** Largest accepted amount in major units (per expense or settlement). */
 export const MAX_MAJOR_AMOUNT = 1_000_000_000n

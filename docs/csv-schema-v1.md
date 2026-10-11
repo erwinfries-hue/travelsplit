@@ -19,14 +19,17 @@ Beispiele: [export-beispiel.csv](examples/export-beispiel.csv), [import-vorlage.
 
 ## Spalten
 
-`schema_version;row_type;row_id;ref_id;date;title;person_name;counterparty_name;currency;amount_minor;base_currency;base_amount_minor;split_mode;share_value;rate_scaled;status;category;note;amount_display`
+`schema_version;row_type;row_id;ref_id;date;title;person_name;counterparty_name;currency;amount_minor;base_currency;base_amount_minor;split_mode;share_value;rate_scaled;status;category;note;amount_display;source`
+
+Die letzte Spalte `source` (Herkunft einer Ausgabe: `app`, `csv_import`, `whatsapp`) kam nachträglich dazu. Dateien
+ohne diese Spalte bleiben gültig, weil Spalten über den Kopf gelesen werden; der Import ignoriert sie.
 
 | `row_type` | Bedeutung und benutzte Spalten | Import |
 |---|---|---|
 | `trip` | Reise: `row_id`, `date` (Beginn), `title`, `base_currency`, `status`, `note` (Ende) | ignoriert |
 | `person` | Person: `row_id`, `person_name`, `status` (`active`/`placeholder`/`removed`) | ignoriert (Personen entstehen aus den Namen) |
 | `trip_fx` | Kurs: `row_id`=`currency`, `rate_scaled`, `status` (Revision), `date` | wird gesetzt, wenn die Reise noch keinen hat; abweichender Kurs = Fehler |
-| `expense` | Kopfzeile einer Ausgabe: `row_id`, `date`, `title`, `person_name` (Zahler), `currency`, `amount_minor`, `base_amount_minor`, `split_mode` (`equal`/`fixed`/`percent`), `status` (`active`/`admin_reconstruction`/`deleted`), `category`, `note` | ja (`deleted` wird übersprungen) |
+| `expense` | Kopfzeile einer Ausgabe: `row_id`, `date`, `title`, `person_name` (Zahler), `currency`, `amount_minor`, `base_amount_minor`, `split_mode` (`equal`/`fixed`/`percent`), `status` (`active`/`admin_reconstruction`/`deleted`), `category`, `note`, `source` | ja (`deleted` wird übersprungen) |
 | `expense_share` | Anteil: `ref_id` = `row_id` der Ausgabe, `person_name`, `amount_minor` (Anteil Original), `base_amount_minor`, `share_value` (bei `fixed` Kleinsteinheiten, bei `percent` Prozent × 10 000; bei `equal` leer) | ja |
 | `settlement` | Rückzahlung: `person_name` → `counterparty_name`, Original und eingefrorener Basisbetrag, `rate_scaled` (eingefrorener Kurs), `status` | **nein**, muss in der App gemeldet und vom Empfänger bestätigt werden |
 | `settlement_reversal` | Storno: `ref_id` = Rückzahlung, `base_amount_minor`, `note` (Grund) | nein |

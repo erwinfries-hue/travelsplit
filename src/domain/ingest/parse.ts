@@ -4,9 +4,9 @@
 //   [#CODE] <description> <amount> <CUR> [alle|all | Name Name … | 50% Name 50% Name …]
 //
 // Examples: "Taxi 100 GEL alle", "#GEO27 Essen 85 EUR Erwin Larissa", "Hotel 200 EUR 50% Erwin 50% Larissa"
-import { parseAmount } from '../money/amount'
-import { isSupportedCurrency, MoneyError } from '../money/currencies'
-import { PERCENT_SCALE } from '../money/split'
+import { parseAmount } from '../money/amount.ts'
+import { isSupportedCurrency, MoneyError } from '../money/currencies.ts'
+import { PERCENT_SCALE } from '../money/split.ts'
 
 /** Percent values use the split scale: 100 % = 100 × PERCENT_SCALE. */
 export type Participants = { kind: 'all' } | { kind: 'names'; names: string[] } | { kind: 'percent'; shares: { name: string; percent: bigint }[] }
@@ -34,7 +34,10 @@ export type ParseFailure =
   | 'invalid_participants'
   | 'percent_sum_mismatch'
   | 'duplicate_participant'
+  | 'payer_in_text'
 
+// Who paid is never read from the text: the sender is the payer (R2). Such messages go to review.
+const PAYER_WORDS = /(^|\s)(bezahlt|bezahlte|gezahlt|zahlt|zahlte|paid|pays|payed|bezahlen|pay)(\s|$)/i
 const ALL = new Set(['alle', 'all', 'everyone', 'jeder'])
 const MAX_LENGTH = 300
 const NUMBER = /^\d+(?:[.,]\d+)?$/
@@ -74,6 +77,7 @@ export function parseEntry(input: string): ParseResult {
   if (titleTokens.length === 0) return { ok: false, reason: 'missing_title' }
   if (titleTokens.some((t) => HAS_DIGIT.test(t) && /[\d][/:x×-]|[/:x×-][\d]|^\d/.test(t))) return { ok: false, reason: 'ambiguous_amount' }
   const title = titleTokens.join(' ')
+  if (PAYER_WORDS.test(title)) return { ok: false, reason: 'payer_in_text' }
   if (title.length > 120) return { ok: false, reason: 'too_long' }
 
   let amountMinor: bigint
