@@ -1,0 +1,146 @@
+import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
+import { useAuth } from '../../app/auth'
+import { LanguageSwitch } from '../../components/LanguageSwitch'
+import { Badge, Button, Card, Empty, ErrorBox, Field, Input, PageHeader, Section } from '../../components/ui'
+import { dateTime } from '../../lib/format'
+import { type AppError, rpc, toAppError } from '../../lib/rpc'
+import { supabase } from '../../lib/supabase'
+
+interface Notice {
+  id: string
+  trip_id: string | null
+  kind: string
+  payload: Record<string, unknown>
+  created_at: string
+  read_at: string | null
+  trips: { title: string } | null
+}
+
+export function ProfilePage() {
+  const { t, i18n } = useTranslation()
+  const { user, capabilities, signOut } = useAuth()
+  const [name, setName] = useState('')
+  const [notices, setNotices] = useState<Notice[]>([])
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<AppError | null>(null)
+  const [saved, setSaved] = useState(false)
+
+  const load = useCallback(async () => {
+    if (!user) return
+    const [{ data: profile }, { data: rows }] = await Promise.all([
+      supabase.from('profiles').select('display_name').eq('user_id', user.id).maybeSingle(),
+      supabase.from('in_app_notices').select('*, trips(title)').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+    ])
+    if (profile) setName(profile.display_name)
+    setNotices((rows ?? []) as Notice[])
+  }, [user])
+
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  const save = async () => {
+    setBusy(true)
+    setError(null)
+    try {
+      await rpc('upsert_my_profile', { p_display_name: name.trim(), p_locale: i18n.language === 'en' ? 'en' : 'de' })
+      setSaved(true)
+    } catch (e) {
+      setError(toAppError(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const unread = notices.filter((n) => !n.read_at).map((n) => n.id)
+  const markRead = async () => {
+    await rpc('mark_notices_read', { p_ids: unread })
+    await load()
+  }
+
+  return (
+    <div>
+      <PageHeader title={t('profile.title')} />
+      {capabilities?.is_anonymous && (
+        <Card tone="amber" className="mb-3 text-sm">
+          <p className="font-semibold">{t('join.guestWarningTitle')}</p>
+          <p>{t('profile.guestWarning')}</p>
+        </Card>
+      )}
+
+      <Section
+        title={t('profile.notices')}
+        action={
+          unread.length > 0 ? (
+            <button type="button" className="text-sm font-semibold text-navy-600 underline" onClick={() => void markRead()}>
+              {t('profile.markRead')}
+            </button>
+          ) : null
+        }
+      >
+        {notices.length === 0 ? (
+          <Empty>{t('profile.noNotices')}</Empty>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {notices.map((n) => (
+              <li key={n.id}>
+                <Link to={n.trip_id ? `/trips/${n.trip_id}` : '/'}>
+                  <Card tone={n.read_at ? undefined : 'blue'} className="py-3 text-sm">
+                    <p className="font-semibold">
+                      {t(`notices.${n.kind}`, { ...n.payload, defaultValue: n.kind })} {!n.read_at && <Badge tone="blue">{t('profile.new')}</Badge>}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {n.trips?.title ? `${n.trips.title} · ` : ''}
+                      {dateTime(n.created_at)}
+                    </p>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
+
+      <Section title={t('profile.settings')}>
+        <Card className="flex flex-col gap-3">
+          <Field label={t('profile.language')}>
+            <LanguageSwitch />
+          </Field>
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={(e) => {
+              e.preventDefault()
+              void save()
+            }}
+          >
+            <Field label={t('profile.displayName')} htmlFor="profile-name">
+              <Input id="profile-name" maxLength={60} required value={name} onChange={(e) => setName(e.target.value)} />
+            </Field>
+            <ErrorBox error={error} />
+            {saved && <p className="text-sm text-brand-700">{t('common.saved')}</p>}
+            <Button type="submit" variant="secondary" busy={busy}>
+              {t('common.save')}
+            </Button>
+          </form>
+          <p className="text-xs text-slate-500">
+            {capabilities?.is_anonymous ? t('profile.accountGuest') : t('profile.accountGoogle', { email: user?.email ?? '' })}
+            {capabilities?.can_create_trips && ` · ${t('profile.creator')}`}
+          </p>
+        </Card>
+      </Section>
+
+      <Section title={t('profile.install')}>
+        <Card className="text-sm">
+          <p>{t('profile.installAndroid')}</p>
+          <p className="mt-2">{t('profile.installIos')}</p>
+        </Card>
+      </Section>
+
+      <Button variant="ghost" className="mt-6 w-full text-red-700" onClick={() => void signOut()}>
+        {capabilities?.is_anonymous ? t('profile.signOutGuest') : t('profile.signOut')}
+      </Button>
+    </div>
+  )
+}
