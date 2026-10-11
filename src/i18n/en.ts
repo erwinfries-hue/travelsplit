@@ -258,6 +258,8 @@ export const en: Dictionary = {
     installIos: 'iPhone: in Safari tap “Share” and choose “Add to Home Screen”.',
     installAndroid: 'Android: choose “Install app” in the Chrome menu.',
     signOut: 'Sign out',
+    upgradeHint: 'Link your guest access to Google. You stay in all trips and can sign in on any device afterwards.',
+    upgradeGoogle: 'Secure with Google',
     signOutGuest: 'Sign out and give up guest access',
   },
   notices: {
@@ -314,6 +316,8 @@ export const en: Dictionary = {
     unknown_error: 'Something went wrong. Please try again.',
     not_configured: 'The app is not connected to a server yet.',
     login_failed: 'Sign-in failed.',
+    link_failed: 'Linking with Google failed.',
+    google_already_used: 'This Google account is already used for TravelSplit. Guest access cannot be merged into an existing account. Ask the organiser to invite you again with your Google account.',
     network_error: 'No connection. Please check your internet.',
     not_authenticated: 'Please sign in.',
     not_allowed: 'You are not allowed to do this.',

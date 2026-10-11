@@ -256,6 +256,8 @@ export const de = {
     installIos: 'iPhone: In Safari auf «Teilen» tippen und «Zum Home-Bildschirm» wählen.',
     installAndroid: 'Android: Im Chrome-Menü «App installieren» wählen.',
     signOut: 'Abmelden',
+    upgradeHint: 'Verknüpfe deinen Gastzugang mit Google. Du bleibst in allen Reisen und kannst dich danach auf jedem Gerät anmelden.',
+    upgradeGoogle: 'Mit Google sichern',
     signOutGuest: 'Abmelden und Gastzugang aufgeben',
   },
   notices: {
@@ -312,6 +314,8 @@ export const de = {
     unknown_error: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
     not_configured: 'Die App ist noch nicht mit dem Server verbunden.',
     login_failed: 'Anmeldung fehlgeschlagen.',
+    link_failed: 'Verknüpfen mit Google ist fehlgeschlagen.',
+    google_already_used: 'Dieses Google-Konto wird schon für TravelSplit verwendet. Ein Gastzugang lässt sich nicht mit einem bestehenden Konto zusammenführen. Bitte die Reiseleitung, dich mit dem Google-Konto neu einzuladen.',
     network_error: 'Keine Verbindung. Bitte prüfe dein Internet.',
     not_authenticated: 'Bitte melde dich an.',
     not_allowed: 'Dafür fehlt dir die Berechtigung.',

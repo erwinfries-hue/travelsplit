@@ -26,6 +26,7 @@ export function ProfilePage() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<AppError | null>(null)
   const [saved, setSaved] = useState(false)
+  const [linkError, setLinkError] = useState<AppError | null>(null)
 
   const load = useCallback(async () => {
     if (!user) return
@@ -54,6 +55,20 @@ export function ProfilePage() {
     }
   }
 
+  // Guest → Google upgrade (R6): links a Google identity to the SAME user, so memberships stay.
+  const linkGoogle = async () => {
+    setBusy(true)
+    setLinkError(null)
+    const { error: e } = await supabase.auth.linkIdentity({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/profile`, scopes: 'openid email profile' },
+    })
+    if (e) {
+      setLinkError(toAppError({ message: /already|exists/i.test(e.message) ? 'google_already_used' : 'link_failed' }))
+      setBusy(false)
+    }
+  }
+
   const unread = notices.filter((n) => !n.read_at).map((n) => n.id)
   const markRead = async () => {
     await rpc('mark_notices_read', { p_ids: unread })
@@ -67,6 +82,11 @@ export function ProfilePage() {
         <Card tone="amber" className="mb-3 text-sm">
           <p className="font-semibold">{t('join.guestWarningTitle')}</p>
           <p>{t('profile.guestWarning')}</p>
+          <p className="mt-2">{t('profile.upgradeHint')}</p>
+          <Button className="mt-3 w-full" onClick={() => void linkGoogle()} busy={busy}>
+            {t('profile.upgradeGoogle')}
+          </Button>
+          <ErrorBox error={linkError} />
         </Card>
       )}
 

@@ -28,6 +28,7 @@ npm run build && npm run check:bundle-secrets
 
 - [docs/p0-abnahmebericht.md](docs/p0-abnahmebericht.md): Stand P0, Nachweise, offene Punkte
 - [docs/backup-restore.md](docs/backup-restore.md): Betreiber-Anleitung Backup und Wiederherstellung (R4)
+- [docs/betreiber-runbook.md](docs/betreiber-runbook.md): Freigaben, Admin-Recovery, verlorene Gastzugänge
 
 ## Sicherheit
 

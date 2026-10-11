@@ -38,6 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const userId = session?.user.id
+  // Re-read capabilities when a guest becomes a Google user (same id, new identity).
+  const identityCount = session?.user.identities?.length ?? 0
   const refreshCapabilities = useCallback(async () => {
     if (!userId) {
       setCapabilities(null)
@@ -48,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       setCapabilities(null)
     }
-  }, [userId])
+  }, [userId, identityCount])
 
   useEffect(() => {
     void refreshCapabilities()
