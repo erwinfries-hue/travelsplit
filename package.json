@@ -15,7 +15,9 @@
     "test:e2e": "playwright test",
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
-    "check:bundle-secrets": "node scripts/check-bundle-secrets.mjs"
+    "check:bundle-secrets": "node scripts/check-bundle-secrets.mjs",
+    "seed:dev": "node scripts/dev-seed.mjs",
+    "probe:backup": "node scripts/backup/probe.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
