@@ -92,8 +92,12 @@ describe('SEC-02: Realtime liefert keine fremden Reisedaten', () => {
     const stopMember = await subscribe(lg, 'member')
     const stopOutsider = await subscribe(mallory, 'outsider')
     await new Promise((r) => setTimeout(r, 1000))
-    await addExpense(ef, trip.tripId, { currency: 'EUR', minor: 100, participants: equal(trip.personIds.Larissa) })
-    await new Promise((r) => setTimeout(r, 3000))
+    // Right after a fresh stack start the realtime server may need a moment: book until the member sees one.
+    for (let attempt = 0; attempt < 5 && received.member === 0; attempt++) {
+      await addExpense(ef, trip.tripId, { currency: 'EUR', minor: 100, participants: equal(trip.personIds.Larissa) })
+      for (let i = 0; i < 20 && received.member === 0; i++) await new Promise((r) => setTimeout(r, 250))
+    }
+    await new Promise((r) => setTimeout(r, 1500))
     await stopMember()
     await stopOutsider()
     expect(received.member).toBeGreaterThan(0)

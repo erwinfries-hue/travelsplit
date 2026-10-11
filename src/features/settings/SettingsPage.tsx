@@ -6,6 +6,7 @@ import { Button, Card, ErrorBox, Field, Input, PageHeader, Section, Select } fro
 import { money } from '../../lib/format'
 import { type AppError, rpc, toAppError } from '../../lib/rpc'
 import { useTripContext } from '../trip/TripLayout'
+import { DeleteTripSection } from './DeleteTripSection'
 
 export function SettingsPage() {
   const { t } = useTranslation()
@@ -158,6 +159,7 @@ export function SettingsPage() {
           </Card>
         )}
       </Section>
+      {trip.status === 'archived' && <DeleteTripSection trip={trip} />}
     </div>
   )
 }

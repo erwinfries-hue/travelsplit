@@ -185,6 +185,13 @@ export const de = {
     checkFailed: 'Summenprüfung fehlgeschlagen: Bitte Seite neu laden und den Betreiber informieren.',
     frozenRate: 'Kurs eingefroren',
   },
+  deletion: {
+    title: 'Reise endgültig löschen',
+    warning: 'Alle Ausgaben, Anteile, Kurse, Rückzahlungen, Belegfotos, Einladungen und der Verlauf dieser Reise werden für alle Mitglieder unwiderruflich gelöscht. Auch der Betreiber kann sie danach nicht wiederherstellen, ausser aus einem älteren Backup.',
+    exportFirst: 'Lade vorher die CSV und die Abrechnung herunter, wenn ihr sie aufbewahren wollt.',
+    typeTitle: 'Zur Bestätigung den Namen der Reise eingeben: «{{title}}»',
+    button: 'Endgültig löschen',
+  },
   categories: {
     transport: 'Transport',
     accommodation: 'Unterkunft',
@@ -336,6 +343,7 @@ export const de = {
     claim_rejected: 'Dein Beitritt zu «{{trip_title}}» wurde abgelehnt.',
     trip_archived: 'Die Reise wurde abgeschlossen.',
     csv_imported: '{{count}} Ausgaben wurden per CSV importiert.',
+    trip_deleted: 'Die Reise «{{trip_title}}» wurde gelöscht.',
     trip_reopened: 'Die Reise wurde wieder geöffnet.',
   },
   audit: {
@@ -464,6 +472,9 @@ export const de = {
     csv_empty: 'Die Datei ist leer.',
     csv_not_travelsplit: 'Die Kopfzeile passt nicht zum TravelSplit-Format.',
     csv_column_count: 'Falsche Anzahl Spalten.',
+    confirm_title_mismatch: 'Der eingegebene Name stimmt nicht genau.',
+    deletion_not_requested: 'Bitte die Löschung erneut starten.',
+    receipts_remaining: 'Es sind noch Belegfotos vorhanden. Bitte erneut versuchen.',
     receipt_not_uploaded: 'Der Beleg wurde nicht hochgeladen.',
     image_unreadable: 'Das Bild konnte nicht gelesen werden.',
     image_too_large: 'Das Bild ist auch verkleinert grösser als 1 MB.',

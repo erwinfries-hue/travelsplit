@@ -187,6 +187,13 @@ export const en: Dictionary = {
     checkFailed: 'Sum check failed: please reload and inform the operator.',
     frozenRate: 'rate frozen',
   },
+  deletion: {
+    title: 'Delete trip permanently',
+    warning: 'All expenses, shares, rates, repayments, receipt photos, invitations and the history of this trip are deleted for every member, irreversibly. Not even the operator can restore them, except from an older backup.',
+    exportFirst: 'Download the CSV and the statement first if you want to keep them.',
+    typeTitle: 'To confirm, type the trip name: “{{title}}”',
+    button: 'Delete permanently',
+  },
   categories: {
     transport: 'Transport',
     accommodation: 'Accommodation',
@@ -338,6 +345,7 @@ export const en: Dictionary = {
     claim_rejected: 'Your request to join “{{trip_title}}” was rejected.',
     trip_archived: 'The trip was closed.',
     csv_imported: '{{count}} expenses were imported from CSV.',
+    trip_deleted: 'The trip “{{trip_title}}” was deleted.',
     trip_reopened: 'The trip was reopened.',
   },
   audit: {
@@ -466,6 +474,9 @@ export const en: Dictionary = {
     csv_empty: 'The file is empty.',
     csv_not_travelsplit: 'The header does not match the TravelSplit format.',
     csv_column_count: 'Wrong number of columns.',
+    confirm_title_mismatch: 'The name you typed does not match exactly.',
+    deletion_not_requested: 'Please start the deletion again.',
+    receipts_remaining: 'Some receipt photos are still there. Please try again.',
     receipt_not_uploaded: 'The receipt was not uploaded.',
     image_unreadable: 'The image could not be read.',
     image_too_large: 'Even after shrinking, the image is larger than 1 MB.',
