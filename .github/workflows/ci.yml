@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - name: Start local Supabase
+        run: npx supabase start
+      - run: npm run test:integration
+      - run: npm run build
+      - run: npm run check:bundle-secrets
+      - name: Seed local demo data
+        run: npm run seed:dev
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

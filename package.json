@@ -1,0 +1,53 @@
+{
+  "name": "travelsplit",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "oxlint src tests scripts",
+    "typecheck": "tsc -b --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:e2e": "playwright test",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "check:bundle-secrets": "node scripts/check-bundle-secrets.mjs",
+    "seed:dev": "node scripts/dev-seed.mjs",
+    "probe:backup": "node scripts/backup/probe.mjs",
+    "test:csv-office": "node --experimental-strip-types tests/office/csv-injection.mjs"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@supabase/supabase-js": "^2.117.3",
+    "dexie": "^4.4.6",
+    "i18next": "^26.4.3",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-hook-form": "^7.90.0",
+    "react-i18next": "^17.0.16",
+    "react-router": "^8.4.0",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "fast-check": "^4.10.2",
+    "oxlint": "^1.81.0",
+    "pg": "^8.23.1",
+    "supabase": "^2.120.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.0.3"
+  }
+}
