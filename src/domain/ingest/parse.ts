@@ -6,7 +6,7 @@
 // Examples: "Taxi 100 GEL alle", "#GEO27 Essen 85 EUR Erwin Larissa", "Hotel 200 EUR 50% Erwin 50% Larissa"
 import { parseAmount } from '../money/amount.ts'
 import { isSupportedCurrency, MoneyError } from '../money/currencies.ts'
-import { PERCENT_SCALE } from '../money/split.ts'
+import { parsePercent, PERCENT_SCALE } from '../money/split.ts'
 
 /** Percent values use the split scale: 100 % = 100 × PERCENT_SCALE. */
 export type Participants = { kind: 'all' } | { kind: 'names'; names: string[] } | { kind: 'percent'; shares: { name: string; percent: bigint }[] }
@@ -99,10 +99,14 @@ function parseParticipants(rest: string[]): Participants | null | { reason: Pars
     if (rest.length % 2 !== 0) return { reason: 'invalid_participants' }
     const shares: { name: string; percent: bigint }[] = []
     for (let i = 0; i < rest.length; i += 2) {
-      const pct = /^(\d{1,3})(?:[.,](\d{1,4}))?%$/.exec(rest[i])
-      if (!pct || !NAME.test(rest[i + 1])) return { reason: 'invalid_participants' }
-      const scaled = BigInt(pct[1]) * PERCENT_SCALE + BigInt((pct[2] ?? '').padEnd(4, '0'))
-      shares.push({ name: rest[i + 1], percent: scaled })
+      if (!rest[i].endsWith('%') || !NAME.test(rest[i + 1])) return { reason: 'invalid_participants' }
+      let percent: bigint
+      try {
+        percent = parsePercent(rest[i].slice(0, -1))
+      } catch {
+        return { reason: 'invalid_participants' }
+      }
+      shares.push({ name: rest[i + 1], percent })
     }
     if (shares.reduce((a, s) => a + s.percent, 0n) !== 100n * PERCENT_SCALE) return { reason: 'percent_sum_mismatch' }
     if (hasDuplicates(shares.map((s) => s.name))) return { reason: 'duplicate_participant' }

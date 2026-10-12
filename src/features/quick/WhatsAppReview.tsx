@@ -9,6 +9,7 @@ import { supabase } from '../../lib/supabase'
 interface ReviewItem {
   id: string
   trip_id: string | null
+  user_id: string
   reason_code: string
   message_text: string | null
   created_at: string
@@ -20,17 +21,19 @@ interface ReviewItem {
  */
 export function WhatsAppReview({ tripId }: { tripId: string | null }) {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, capabilities } = useAuth()
+  // Nothing can exist while WhatsApp was never switched on; skip the request then.
+  const enabled = !!capabilities && capabilities.whatsapp_mode !== 'off'
   const navigate = useNavigate()
   const [items, setItems] = useState<ReviewItem[]>([])
 
   const load = useCallback(async () => {
-    if (!user) return
-    let query = supabase.from('whatsapp_review_queue').select('id, trip_id, reason_code, message_text, created_at').eq('status', 'needs_review')
+    if (!user || !enabled) return
+    let query = supabase.from('whatsapp_review_queue').select('id, trip_id, user_id, reason_code, message_text, created_at').eq('status', 'needs_review')
     query = tripId ? query.eq('trip_id', tripId) : query.is('trip_id', null).eq('user_id', user.id)
     const { data } = await query.order('created_at')
     setItems((data ?? []) as ReviewItem[])
-  }, [user, tripId])
+  }, [user, tripId, enabled])
 
   useEffect(() => {
     void load()
@@ -55,10 +58,11 @@ export function WhatsAppReview({ tripId }: { tripId: string | null }) {
             <Card tone="amber" className="flex flex-col gap-2 text-sm">
               <p className="font-semibold break-words">{item.message_text ?? t('whatsapp.noText')}</p>
               <p className="text-xs text-slate-600">
-                {t([`whatsapp.reasons.${item.reason_code}`, `quick.errors.${item.reason_code}`, `errors.${item.reason_code}`, 'whatsapp.reasons.other'], { name: '' })}
+                {t([`whatsapp.reasons.${item.reason_code}`, `quick.errors.${item.reason_code}`, `errors.${item.reason_code}`, 'whatsapp.reasons.other'])}
               </p>
               <div className="flex gap-2">
-                {item.message_text && (
+                {/* Only the sender re-enters it: the form books the signed-in person as payer. */}
+                {item.message_text && item.user_id === user?.id && (
                   <Button variant="secondary" onClick={() => open(item)}>
                     {t('whatsapp.open')}
                   </Button>

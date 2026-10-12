@@ -1,3 +1,4 @@
+import pg from 'pg'
 import { expect, test, type Page } from '@playwright/test'
 
 async function login(page: Page, next = '/login') {
@@ -41,7 +42,6 @@ test('Android-Teilen öffnet die Schnellerfassung mit dem geteilten Text', async
 })
 
 test('WhatsApp-Prüffall erscheint in der Reise, öffnet die Schnellerfassung und lässt sich erledigen', async ({ page }) => {
-  const { default: pg } = await import('pg')
   const client = new pg.Client({ connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres' })
   await client.connect()
   try {
@@ -50,6 +50,8 @@ test('WhatsApp-Prüffall erscheint in der Reise, öffnet die Schnellerfassung un
       join public.trip_people p on p.trip_id = t.id join auth.users u on u.id = p.linked_user_id
       where t.title = 'Lissabon 2026 (Demo)' and u.email = 'erwin@dev.travelsplit.local' limit 1`)
     const { trip_id, user_id } = rows[0]
+    // The list only queries while WhatsApp is switched on (sandbox for this test, back to off below).
+    await client.query(`update private.whatsapp_config set mode = 'sandbox', allowed_phone_number_id = '100200300400' where id = 1`)
     const ev = await client.query(
       `insert into public.whatsapp_inbound_events (provider_message_id, sender_hash, kind, trip_id, processing_status, reason_code)
        values ($1, repeat('a', 64), 'expense', $2, 'needs_review', 'unknown_person') returning id`,
@@ -72,6 +74,10 @@ test('WhatsApp-Prüffall erscheint in der Reise, öffnet die Schnellerfassung un
   await expect(page.getByLabel('Schnellerfassung')).toHaveValue('Fado 30 EUR Erwin Zora')
   await page.getByRole('button', { name: 'Erledigt' }).first().click()
   await expect(review).toBeHidden()
+  const reset = new pg.Client({ connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres' })
+  await reset.connect()
+  await reset.query(`update private.whatsapp_config set mode = 'off', allowed_phone_number_id = null where id = 1`)
+  await reset.end()
 })
 
 test('Reiseleitung setzt einen Reisecode, geteilte Nachricht mit #CODE landet direkt in dieser Reise', async ({ page }) => {

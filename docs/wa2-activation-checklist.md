@@ -24,6 +24,12 @@ Den Pepper nie wechseln, sonst müssen alle Verbindungen neu hergestellt werden.
 - [ ] Vorher prüfen, dass der Bundler den gemeinsamen Parser aus `src/domain/ingest/` einbindet (lokal mit `npx supabase functions serve` testen).
 - [ ] Datenbank: `update private.whatsapp_config set mode = 'sandbox', allowed_phone_number_id = '…', business_number = '…', approval_reference = '…' where id = 1;`
 
+## Bekannte Eigenheiten, vor WA2 entscheiden
+
+- **«alle» per WhatsApp** = alle beigetretenen Mitglieder (Spezifikation §6), ohne Platzhalter. In der App wählt «alle» auch Platzhalter vor. Gleicher Text kann also unterschiedlich aufteilen; Platzhalter per Namen nennen oder hier vereinheitlichen.
+- **Datum** = Tag der Nachricht in Europe/Zurich. Reisen haben noch keine eigene Zeitzone; nach Mitternacht Ortszeit in fernen Ländern kann das Datum einen Tag früher sein (in der App korrigierbar).
+- **Deploy-Bündelung:** Die Funktion importiert den Parser aus `src/domain/`. Falls `supabase functions deploy` Dateien ausserhalb von `supabase/functions` nicht einbindet, den Parser vorher mit `vite build --ssr` o. ä. in die Funktion bündeln oder nach `supabase/functions/_shared/` verschieben.
+
 ## 4. Abnahme mit 2–3 echten Testpersonen
 
 - [ ] Reiseleitung erstellt unter Personen einen Verbindungscode (UI dafür noch bauen, RPC `create_whatsapp_link` existiert), Person sendet `LINK …` selbst.

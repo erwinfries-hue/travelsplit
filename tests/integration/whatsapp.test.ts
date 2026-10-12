@@ -431,6 +431,32 @@ describe('WA1-4..12: Buchung', () => {
   })
 })
 
+describe('Aufbewahrung', () => {
+  it('alte Nachrichtentexte werden auch bei ausgeschaltetem Modus gelöscht; der Betreiber kann jederzeit aufräumen', async () => {
+    const admin = await createUser('Erwin', { creator: true })
+    const t = await setupTrip(admin, [])
+    const ev = await db().query(
+      `insert into public.whatsapp_inbound_events (provider_message_id, sender_hash, kind, processing_status) values ($1, repeat('b', 64), 'expense', 'needs_review') returning id`,
+      [`wamid.old.${randomUUID()}`],
+    )
+    const item = await db().query(
+      `insert into public.whatsapp_review_queue (event_id, trip_id, user_id, reason_code, message_text, created_at)
+       values ($1, $2, $3, 'unknown_person', 'Taxi 5 EUR Zora', now() - interval '31 days') returning id`,
+      [ev.rows[0].id, t.tripId, admin.id],
+    )
+    await db().query(`update private.whatsapp_config set mode = 'off' where id = 1`)
+    try {
+      await send(newPhone(), 'Taxi 10 EUR alle')
+    } finally {
+      await db().query(`update private.whatsapp_config set mode = 'sandbox' where id = 1`)
+    }
+    const { rows } = await db().query(`select message_text from public.whatsapp_review_queue where id = $1`, [item.rows[0].id])
+    expect(rows[0].message_text).toBeNull()
+    const purged = await db().query(`select private.operator_purge_whatsapp_texts() as n`)
+    expect(purged.rows[0].n).toBeGreaterThanOrEqual(0)
+  })
+})
+
 let createdOutsider: TestUser['client']
 beforeAll(async () => {
   createdOutsider = (await createUser('Mallory')).client

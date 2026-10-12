@@ -370,6 +370,9 @@ export const de = {
     noText: 'Text nicht mehr gespeichert',
     reasons: {
       needs_trip_selection: 'Unklar, für welche Reise. Bitte Reisecode angeben (#CODE).',
+      unknown_person: 'Ein genannter Name ist in dieser Reise nicht bekannt.',
+      ambiguous_person: 'Ein Name passt auf mehrere Personen. Bitte den vollen Namen verwenden.',
+      booking_failed: 'Konnte wegen unerwarteter Daten nicht gebucht werden.',
       participants_missing: 'Keine Teilnehmenden genannt (z. B. alle).',
       unparsable: 'Nachricht nicht lesbar.',
       other: 'Konnte nicht automatisch gebucht werden.',

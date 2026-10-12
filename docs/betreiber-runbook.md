@@ -53,3 +53,12 @@ mit «Mit Google sichern» an ein Google-Konto binden.
 ## Backup
 
 Siehe [backup-restore.md](backup-restore.md).
+
+## WhatsApp-Prüffälle aufräumen
+
+Nur relevant, falls WhatsApp je eingeschaltet war. Löscht gespeicherte Nachrichtentexte erledigter und über 30 Tage
+alter Prüffälle (läuft sonst bei jeder eingehenden Nachricht automatisch):
+
+```sql
+select private.operator_purge_whatsapp_texts();
+```

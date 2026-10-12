@@ -393,6 +393,9 @@ declare
   v_trip public.trips;
 begin
   select * into v_config from private.whatsapp_config where id = 1;
+  -- Retention first, so it also happens on deliveries that are refused below.
+  update public.whatsapp_review_queue set message_text = null
+   where message_text is not null and created_at < now() - interval '30 days';
   -- Fail closed: switched off or a delivery for a number we do not operate is not even recorded.
   if v_config.mode = 'off' then return jsonb_build_object('status', 'disabled'); end if;
   if p_event ->> 'phone_number_id' is distinct from v_config.allowed_phone_number_id then
@@ -424,10 +427,6 @@ begin
           where e.received_at > now() - interval '1 day') > v_config.max_events_per_day then
     return private.whatsapp_reject(v_event, 'rejected', 'rate_limited');
   end if;
-
-  -- Retention: message texts of old review items are dropped.
-  update public.whatsapp_review_queue set message_text = null
-   where message_text is not null and created_at < now() - interval '30 days';
 
   if v_kind = 'unsupported' then return private.whatsapp_reject(v_event, 'ignored', 'unsupported_type'); end if;
 
@@ -552,14 +551,33 @@ begin
       v_parsed ->> 'currency', (v_parsed ->> 'amount_minor')::bigint, v_mode, v_participants,
       v_conn.person_id, null, null, true,
       jsonb_build_object('participants', to_jsonb(v_ids), 'whatsapp_event_id', v_event));
-  exception when sqlstate 'P0001' then
-    -- Server-side rule failed (missing rate, invalid amount, ...): unbooked review item instead.
-    return private.whatsapp_review(v_event, v_conn.trip_id, v_user, left(sqlerrm, 64), v_text, v_parsed);
+  exception
+    when sqlstate 'P0001' then
+      -- Server-side rule failed (missing rate, invalid amount, ...): unbooked review item instead.
+      return private.whatsapp_review(v_event, v_conn.trip_id, v_user, left(sqlerrm, 64), v_text, v_parsed);
+    when data_exception or integrity_constraint_violation then
+      -- Unexpected data (e.g. an out-of-range amount): also a review item, so a Meta retry cannot loop on it.
+      return private.whatsapp_review(v_event, v_conn.trip_id, v_user, 'booking_failed', v_text, v_parsed);
   end;
   update public.whatsapp_inbound_events set processing_status = 'booked', expense_id = v_expense where id = v_event;
   return jsonb_build_object('status', 'booked', 'expense_id', v_expense);
 end;
 $$;
+
+-- Operator: drop old review texts even when no message arrives (e.g. mode off). Safe to run any time.
+create or replace function private.operator_purge_whatsapp_texts()
+returns integer
+language sql
+security definer
+set search_path = ''
+as $$
+  with done as (
+    update public.whatsapp_review_queue set message_text = null
+     where message_text is not null and (status <> 'needs_review' or created_at < now() - interval '30 days')
+    returning 1)
+  select count(*)::integer from done
+$$;
+revoke all on function private.operator_purge_whatsapp_texts() from public, anon, authenticated;
 
 -- Webhook-only entry point; the client roles never reach it.
 revoke all on function public.whatsapp_ingest(jsonb) from public, anon, authenticated;

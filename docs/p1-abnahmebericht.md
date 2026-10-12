@@ -18,12 +18,12 @@ und die beiden Handy-Tests gemacht, lautet die Empfehlung «möglich».
 |---|---|
 | Lint (oxlint), Typecheck (TS strict) | grün |
 | Unit-Tests (Geldlogik, CSV, Bilder, Parser, i18n) | 81/81 |
-| Integrations- und Angriffstests gegen lokales Supabase | 66/66 (davon 18 WhatsApp) |
+| Integrations- und Angriffstests gegen lokales Supabase | 67/67 (davon 19 WhatsApp) |
 | Klicktests Handy-Viewport (Playwright, Pixel 7, de-CH) | 12/12 |
 | CSV-Formel-Schutz mit echtem LibreOffice | 3/3 |
 | Backup/Restore-Probe in isoliertem zweitem Stack | 19/19 |
 | Build und Secret-Scan des Bundles (SEC-15) | grün |
-| GitHub-CI | **nie gelaufen**: GitHub startet keine Jobs («recent account payments have failed or your spending limit needs to be increased»). Liegt am GitHub-Konto, nicht am Code. |
+| GitHub-CI | grün (seit das Repo öffentlich ist; vorher waren die Gratis-Minuten des Kontos aufgebraucht) |
 
 ## P1-Umfang (Auftrag §13) und Stand
 
@@ -85,11 +85,11 @@ und die beiden Handy-Tests gemacht, lautet die Empfehlung «möglich».
 | Verlorener Gastzugang | Gast kommt nicht mehr in die Reise | neuer Link durch die Reiseleitung; Google-Upgrade empfohlen |
 | iPhone: kein Teilen-Ziel, Google-Login öffnet evtl. Safari | etwas umständlicher | Text kopieren und einfügen; auf echtem Gerät prüfen |
 | Anbieter ändern Gratis-Limits | Kosten oder Sperre | monatlich Usage ansehen; kein Bezahlplan aktivieren |
-| GitHub-Actions gesperrt | keine automatischen Tests auf GitHub | Billing im GitHub-Konto klären; bis dahin lokal geprüft |
+| Repo ist öffentlich | Code für alle lesbar | keine Geheimnisse im Repo (geprüft), Secret-Scan im CI |
 | WhatsApp-Bot | nicht zulässig (WA0) | `WHATSAPP_MODE=off`, Ersatz per Schnellerfassung |
 
 ## Was Erwin als Nächstes tun kann
 
-1. GitHub → Settings → Billing and plans: Zahlungsproblem beheben, damit die CI läuft.
+1. PR #1 ansehen und mergen (CI grün).
 2. Konten anlegen und die App veröffentlichen, nach [installation-und-betrieb.md](installation-und-betrieb.md).
 3. Mit zwei Testpersonen auf Galaxy und iPhone eine Probereise machen.

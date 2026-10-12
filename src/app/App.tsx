@@ -17,6 +17,7 @@ import { TripPage } from '../features/trip/TripPage'
 import { NewTripPage } from '../features/trips/NewTripPage'
 import { TripsPage } from '../features/trips/TripsPage'
 import { AuthProvider, useAuth } from './auth'
+import { takeAfterLogin } from './afterLogin'
 import { Layout } from './Layout'
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -24,6 +25,8 @@ function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation()
   if (!ready) return <Loading />
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
+  const restored = takeAfterLogin(location.pathname, location.search)
+  if (restored) return <Navigate to={restored} replace />
   return children
 }
 

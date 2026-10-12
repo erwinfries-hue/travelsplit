@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router'
+import { rememberAfterLogin } from '../../app/afterLogin'
 import { useAuth } from '../../app/auth'
 import logo from '../../assets/logo.png'
 import { LanguageSwitch } from '../../components/LanguageSwitch'
@@ -24,9 +25,12 @@ export function LoginPage() {
   const google = async () => {
     setBusy(true)
     setError(null)
+    // Only the path goes through Google and the redirect allowlist; a query (e.g. shared text) stays in this tab.
+    const [path, query = ''] = from.split('?')
+    if (query) rememberAfterLogin(from)
     const { error: e } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}${from}`, scopes: 'openid email profile' },
+      options: { redirectTo: `${window.location.origin}${path}`, scopes: 'openid email profile' },
     })
     if (e) {
       setError(toAppError(e))

@@ -1,6 +1,6 @@
 # WA1: Sicherheitstests des WhatsApp-Adapters
 
-**Stand:** 11.10.2026 · **Ergebnis:** 18/18 grün · nur synthetische, lokal signierte Nachrichten, kein Meta-Zugang
+**Stand:** 11.10.2026 · **Ergebnis:** 19/19 grün · nur synthetische, lokal signierte Nachrichten, kein Meta-Zugang
 
 Ausführen: `npx supabase start`, dann `npx vitest run --project integration tests/integration/whatsapp.test.ts`.
 Die Tests rufen den echten Webhook-Code (`supabase/functions/whatsapp-webhook/handler.ts`) mit einem Request auf und
@@ -27,6 +27,7 @@ auf `sandbox`, danach wieder auf `off`.
 | WA1-11 | WhatsApp-Ausgabe bleibt nach dem Abschalten sichtbar und in der App änderbar; CSV-Spalte `source`, Hinweis im PDF | ✓ |
 | WA1-12 | der Webhook macht keinen einzigen Netzwerkaufruf; `outbound_enabled = true` scheitert am Constraint; Limit pro Absender greift fail-closed; Telefonnummer verlässt den Webhook nie im Klartext | ✓ |
 | Zusatz | Prüffall erledigen oder verwerfen löscht den gespeicherten Text | ✓ |
+| Zusatz | Nachrichtentexte älter als 30 Tage werden auch bei ausgeschaltetem Modus gelöscht; Betreiberfunktion zum Aufräumen | ✓ |
 
 ## Weitere Schutzmassnahmen im Code
 

@@ -8,6 +8,7 @@ export interface Capabilities {
   can_create_trips: boolean
   is_anonymous: boolean
   has_google: boolean
+  whatsapp_mode?: 'off' | 'sandbox' | 'production'
 }
 
 interface AuthState {

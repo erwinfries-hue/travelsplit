@@ -372,6 +372,9 @@ export const en: Dictionary = {
     noText: 'Text no longer stored',
     reasons: {
       needs_trip_selection: 'Unclear which trip. Please add the trip code (#CODE).',
+      unknown_person: 'A name in the message is not part of this trip.',
+      ambiguous_person: 'A name matches several people. Please use the full name.',
+      booking_failed: 'Could not be booked because of unexpected data.',
       participants_missing: 'No participants named (e.g. all).',
       unparsable: 'Message could not be read.',
       other: 'Could not be booked automatically.',
